@@ -11,6 +11,7 @@ public class Main {
     public static final String CARD_DIR_NAME = "./cards";
     //public static final String COMPARE_DIR_NAME = "./compare/";
     public static final String EXTRACT_DIR_NAME = "./extract/";
+    public static final String DIFF_DIR_NAME = "./diff/";
     private static Map<String, BufferedImage> cardsMap = new HashMap<String, BufferedImage>();
 
     public static void loadCards(String dir) throws IOException {
@@ -33,13 +34,15 @@ public class Main {
         }
     }
 
-    public static int isEqualImages(BufferedImage img1, BufferedImage img2) {
+    public static int isEqualImages(BufferedImage img1, BufferedImage img2, BufferedImage diff) {
         int w = 0;
-        for (int i = 0; i < img1.getWidth(); i++)
-            for (int j = 0; j < img1.getHeight(); j++) {
+        int d = 10;
+        for (int i = d; i < img1.getWidth() - d; i++)
+            for (int j = d; j < img1.getHeight() - d; j++) {
                 Color c1 = new Color(img1.getRGB(i, j));
                 Color c2 = new Color(img2.getRGB(i, j));
                 if (!c1.equals(c2)) {
+                    diff.setRGB(i,j,c2.getRGB());
                     w++;
                 }
             }
@@ -47,32 +50,39 @@ public class Main {
     }
 
     public static void testTable(String name) throws IOException {
-        int w = 20;
-        int h = 20;
+        int w = 0;
+        int h = 0;
         File file = new File(name);
         loadCards(CARD_DIR_NAME + "/Clubs");
         System.out.print(name + "-");
         BufferedImage img = ImageIO.read(file);
-        for (int i = 0; i < 5; i++) {
+        for (int i = 1; i < 2; i++) {
             BufferedImage img1 = img.getSubimage(
                 143 + i * 72 + w, 585 + h, 63 - w, 89 - h);
             //ImageIO.write(img1, "png", new File(EXTRACT_DIR_NAME + file.getName() + "-"  + i));
+            int index = i;
             cardsMap.forEach((k, v) -> {
-                System.out.println("(" + k + ',' + isEqualImages(img1, v) + ")");
+                BufferedImage diff = new BufferedImage(img1.getWidth(), img1.getHeight(), BufferedImage.TYPE_INT_BGR);
+                System.out.println("(" + k + ',' + isEqualImages(img1, v, diff) + ")");
+                try {
+                    ImageIO.write(diff, "png", new File(DIFF_DIR_NAME + file.getName() + "-"  + k));
+                } catch (IOException e) {
+                    System.out.println("Error write file " + index);
+                }
             });
         }
         System.out.println();
     }
 
 
-    public static void main(String[] args) throws IOException {
+   public static void main(String[] args) throws IOException {
         //ImageIO.write(img1, "png", new File(COMPARE_DIR_NAME + file.getName() + "-"  + counter));
         //ImageIO.write(img1, "png", new File(EXTRACT_DIR_NAME + file.getName() + "-"  + i));
         File fileName = new File(args[0]);
         fileName.listFiles();
         loadCards(CARD_DIR_NAME);
-        int w = 10;
-        int h = 10;
+        int w = 0;
+        int h = 0;
         for (File file : fileName.listFiles()) {
             System.out.print(file + "-");
             BufferedImage img = ImageIO.read(file);
@@ -80,8 +90,9 @@ public class Main {
                 BufferedImage img1 = img.getSubimage(
                     143 + i * 72 + w, 585 + h, 63 - w, 89 - h);
                 ImageIO.write(img1, "png", new File(EXTRACT_DIR_NAME + file.getName() + "-"  + i));
+                BufferedImage diff = new BufferedImage(img1.getWidth(), img1.getHeight(), BufferedImage.TYPE_INT_BGR);
                 cardsMap.forEach((k, v) -> {
-                    if (isEqualImages(img1, v) < 100) {
+                    if (isEqualImages(img1, v,diff) < 100) {
                         System.out.print(k);
                     }
                 });
