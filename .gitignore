@@ -1,2 +1,6 @@
 # Project exclude paths
 /out/
+/diff/
+/extract/
+/compare/
+/cards/
