@@ -12,7 +12,15 @@ public class Main {
     //public static final String COMPARE_DIR_NAME = "./compare/";
     public static final String EXTRACT_DIR_NAME = "./extract/";
     public static final String DIFF_DIR_NAME = "./diff/";
+
     private static Map<String, BufferedImage> cardsMap = new HashMap<String, BufferedImage>();
+    private static Set<Color> colors = new HashSet<>(
+        Arrays.asList(
+            new Color(255,255,255), // white
+            new Color(35,35,38), // black
+            new Color(245,166,35), // border
+            new Color(205,73,73) // red
+        ));
 
     public static void loadCards(String dir) throws IOException {
         Files.find(Paths.get(dir),
@@ -36,16 +44,36 @@ public class Main {
 
     public static int isEqualImages(BufferedImage img1, BufferedImage img2, BufferedImage diff) {
         int w = 0;
-        int d = 10;
+        int d = 0;
+        Map<Color, Integer> colorHashMap = new HashMap<Color, Integer>();
+        System.out.println(colors.contains(new Color(255,255,255)));
         for (int i = d; i < img1.getWidth() - d; i++)
             for (int j = d; j < img1.getHeight() - d; j++) {
-                Color c1 = new Color(img1.getRGB(i, j));
+                Color c1 = new Color(img2.getRGB(i, j));
                 Color c2 = new Color(img2.getRGB(i, j));
-                if (!c1.equals(c2)) {
-                    diff.setRGB(i,j,c2.getRGB());
-                    w++;
+
+                Integer count = colorHashMap.get(c1);
+                if (count == null) {
+                    colorHashMap.put(c1, 1);
+                } else {
+                    colorHashMap.put(c1, ++count);
+                }
+                System.out.println(c1 + "-" + colors.contains(c1));
+
+                if (colors.contains(c1)) {
+                    if (!c1.equals(c2)) {
+                        diff.setRGB(i, j, c2.getRGB());
+                        w++;
+                    }
                 }
             }
+
+        for (Color color : colorHashMap.keySet()) {
+            Integer count = colorHashMap.get(color);
+            if (count > 100) {
+                System.out.println(color + "-" + count);
+            }
+        }
         return w;
     }
 
@@ -53,7 +81,7 @@ public class Main {
         int w = 0;
         int h = 0;
         File file = new File(name);
-        loadCards(CARD_DIR_NAME + "/Clubs");
+        loadCards(CARD_DIR_NAME + "/Diamonds");
         System.out.print(name + "-");
         BufferedImage img = ImageIO.read(file);
         for (int i = 1; i < 2; i++) {
