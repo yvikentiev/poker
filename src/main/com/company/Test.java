@@ -1,19 +1,13 @@
 package com.company;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Test {
 
-    private static Test.Node node = new Test().new Node(1, null);
+    private static Test.Node node = new Test().
+        new Node(1, new Test().new Node(2, new Test().new Node(3,null)));
 
     class Node {
         public int value;
@@ -24,7 +18,20 @@ public class Test {
         }
     }
 
-  public static Node reverseList(Node node) {
+    // 1 -> 2 -> 3 -> 4 -> 5
+    //
+    public static Node centerNode(Node head) {
+        Node center = head;
+        Node current = head;
+        while (current.next != null) {
+            Node temp = current;
+            center = current.next;
+            current = temp.next.next;
+        }
+        return center;
+    }
+
+    public static Node reverseList(Node node) {
         Node prev = null;
         Node current = node;
         Node next = null;
@@ -69,11 +76,25 @@ public class Test {
         return true;
     }
 
-    public static void main(String[] args) {
-        Node node2 = reverseList(node);
-        while (node2 != null) {
-            System.out.println(node2.value);
-            node2 = node2.next;
+    public static void sort(int[] array) {
+        for (int i = 0; i < array.length; i++)
+            for (int j = 0; j < array.length; j++) {
+                if (array[j] < array[i]) {
+                    int temp = array[i];
+                    array[i] = array[j];
+                }
+            }
+    }
+
+    public static boolean isPolyndrom(String a) {
+        for (int i = 0; i < a.length() /2; i++) {
+            if (a.charAt(i) != a.charAt(a.length() -i))
+                return false;
         }
+        return true;
+    }
+
+    public static void main(String[] args)  {
+        System.out.println(centerNode(node).value);
     }
 }

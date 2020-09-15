@@ -11,6 +11,6 @@ import org.junit.jupiter.api.Test;
 class MainTest {
     @Test
     public void testCompare() throws IOException {
-        Main.testTable("./tables/20180821_120219.175_0x1FE201D8.png");
+        Main.testTable("./tables/20180821_113158.734_0x1CFF023A.png");
     }
 }
