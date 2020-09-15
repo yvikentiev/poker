@@ -42,6 +42,16 @@ public class Main {
         }
     }
 
+
+    public static boolean similarTo(Color c,Color v){
+        double distance = Math.sqrt((c.getRed() - v.getRed())*(c.getRed() - v.getRed()) + (c.getGreen() - v.getGreen())*(c.getGreen() - v.getGreen()) + (c.getBlue() - v.getBlue())*(c.getBlue() - v.getBlue()));
+        if(distance < 100 ){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     public static int isEqualImages(BufferedImage img1, BufferedImage img2, BufferedImage diff) {
         int w = 0;
         int d = 0;
@@ -60,7 +70,7 @@ public class Main {
                 }
                 //System.out.println(c1 + "-" + colors.contains(c1));
 
-                if (colors.contains(c1) && c1.equals(c2)) {
+                if (!similarTo(c1,c2)) {
                         diff.setRGB(i, j, c2.getRGB());
                         w++;
                 }
