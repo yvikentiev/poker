@@ -49,7 +49,7 @@ public class Main {
         System.out.println(colors.contains(new Color(255,255,255)));
         for (int i = d; i < img1.getWidth() - d; i++)
             for (int j = d; j < img1.getHeight() - d; j++) {
-                Color c1 = new Color(img2.getRGB(i, j));
+                Color c1 = new Color(img1.getRGB(i, j));
                 Color c2 = new Color(img2.getRGB(i, j));
 
                 Integer count = colorHashMap.get(c1);
@@ -58,19 +58,17 @@ public class Main {
                 } else {
                     colorHashMap.put(c1, ++count);
                 }
-                System.out.println(c1 + "-" + colors.contains(c1));
+                //System.out.println(c1 + "-" + colors.contains(c1));
 
-                if (colors.contains(c1)) {
-                    if (!c1.equals(c2)) {
+                if (colors.contains(c1) && c1.equals(c2)) {
                         diff.setRGB(i, j, c2.getRGB());
                         w++;
-                    }
                 }
             }
 
         for (Color color : colorHashMap.keySet()) {
             Integer count = colorHashMap.get(color);
-            if (count > 100) {
+            if (count > 500) {
                 System.out.println(color + "-" + count);
             }
         }
