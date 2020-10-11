@@ -1,3 +1,2 @@
 
-
-java com.company.Main -cp .\out\production\poker\main
+java -cp .\out\production\poker main.com.company.Main ".\tables"

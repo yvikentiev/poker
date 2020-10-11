@@ -85,7 +85,7 @@ public class Main {
                         Math.pow(c1.getBlue() - c2.getBlue(),  2)
                 );
 
-                if (colors.contains(c1) && distance > 100) {
+                if (colors.contains(c1) && distance < 100) {
                     // count pixels of different colors
                     diff.setRGB(i, j, Color.WHITE.getRGB());
                     w++;
@@ -146,7 +146,7 @@ public class Main {
                 ImageIO.write(img1, "png", new File(EXTRACT_DIR_NAME + file.getName() + "-"  + i));
                 BufferedImage diff = new BufferedImage(img1.getWidth(), img1.getHeight(), BufferedImage.TYPE_INT_BGR);
                 cardsMap.forEach((k, v) -> {
-                    if (diffImages(img1, v,diff) > 100) {
+                    if (diffImages(img1, v,diff) < 10) {
                         System.out.print(k);
                     }
                 });
